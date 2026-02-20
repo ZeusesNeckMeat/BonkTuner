@@ -1,5 +1,8 @@
 ## Changelog
 
+### 1.0.1
+- Fixed issue where challenge runs were still using the config values, even when IsEnabledDuringChallenges was disabled
+
 ### 1.0.0 (Initial Release)
 
 **Features:**

@@ -1,6 +1,6 @@
 {
   "name": "BonkTuner",
-  "version_number": "1.0.0",
+  "version_number": "1.0.1",
   "website_url": "https://github.com/ZeusesNeckMeat/BonkTuner",
   "description": "Customize game difficulty with map modifiers, enemy spawn presets, shrine multipliers, and more. Features an in-game UI for real-time configuration.",
   "dependencies": [
