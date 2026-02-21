@@ -13,6 +13,7 @@ internal class Styles
     public static Texture2D SliderBoxTexture { get; private set; }
     public static Texture2D SliderTrackTexture { get; private set; }
     public static Texture2D SliderThumbTexture { get; private set; }
+    public static Texture2D TransparentOverlayTexture { get; private set; }
 
     public static GUIStyle Window { get; private set; }
     public static GUIStyle Header { get; private set; }
@@ -31,6 +32,7 @@ internal class Styles
     public static GUIStyle DragHandle { get; private set; }
     public static GUIStyle DragLabel { get; private set; }
     public static GUIStyle SliderBox { get; private set; }
+    public static GUIStyle TransparentOverlay { get; private set; }
 
     private static bool _isInitialized = false;
 
@@ -50,6 +52,12 @@ internal class Styles
         BoxTexture.SetPixel(0, 0, new Color(0.1f, 0.1f, 0.12f, 0.8f));
         BoxTexture.Apply();
         BoxTexture.hideFlags = HideFlags.HideAndDontSave;
+
+        // Transparent overlay texture - very subtle background for text contrast
+        TransparentOverlayTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+        TransparentOverlayTexture.SetPixel(0, 0, new Color(0.0f, 0.0f, 0.0f, 0.3f));
+        TransparentOverlayTexture.Apply();
+        TransparentOverlayTexture.hideFlags = HideFlags.HideAndDontSave;
 
         // Slider box texture - distinct background for slider controls
         SliderBoxTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
@@ -150,6 +158,24 @@ internal class Styles
         Window.fontSize = 19;
         Window.fontStyle = FontStyle.Bold;
         Window.padding = windowPadding;
+
+        // TransparentOverlay style - for text-only display with subtle background
+        TransparentOverlay = new GUIStyle(GUI.skin.box);
+        TransparentOverlay.normal.background = TransparentOverlayTexture;
+        TransparentOverlay.padding = new RectOffset
+        {
+            left = 8,
+            right = 8,
+            top = 8,
+            bottom = 8
+        };
+        TransparentOverlay.margin = new RectOffset
+        {
+            left = 0,
+            right = 0,
+            top = 0,
+            bottom = 0
+        };
 
         // DragHandle style - visual indicator for draggable area
         DragHandle = new GUIStyle(GUI.skin.box);

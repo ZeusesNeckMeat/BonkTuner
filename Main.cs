@@ -36,18 +36,26 @@ public class Main : BasePlugin
         try
         {
             ClassInjector.RegisterTypeInIl2Cpp<MainWindow>();
+            ClassInjector.RegisterTypeInIl2Cpp<SettingsDisplayWindow>();
             _logger.LogInfo("MainWindow type registered with IL2CPP");
         }
         catch (System.Exception ex)
         {
-            _logger.LogError($"Failed to register MainWindow type: {ex.Message}");
+            _logger.LogError($"Failed to register MainWindow types: {ex.Message}");
             return;
         }
 
-        // Initialize UI
-        var uiObject = new GameObject("BonkTunerUI");
-        uiObject.AddComponent<MainWindow>();
-        UnityEngine.Object.DontDestroyOnLoad(uiObject);
+        var mainUiObject = new GameObject("BonkTunerUI");
+        _ = mainUiObject.AddComponent<MainWindow>();
+        Object.DontDestroyOnLoad(mainUiObject);
+
+        var displayUiObject = new GameObject("BonkTunerSettingsDisplay");
+        var settingsDisplay = displayUiObject.AddComponent<SettingsDisplayWindow>();
+        Object.DontDestroyOnLoad(displayUiObject);
+
+        // Link the windows
+        MainWindow.SetSettingsDisplayReference(settingsDisplay);
+
         _logger.LogInfo("UI initialized");
     }
 }

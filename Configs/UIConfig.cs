@@ -13,13 +13,17 @@ internal class UIConfig
 
     private ConfigEntry<KeyCode> _toggleKey;
     private ConfigEntry<bool> _startOpen;
+    private ConfigEntry<bool> _showSettingsDisplay;
 
     public KeyCode ToggleKey => _toggleKey.Value;
     public bool StartOpen => _startOpen.Value;
+    public bool ShowSettingsDisplay => _showSettingsDisplay.Value;
 
     public void SetToggleKey(KeyCode key) => _toggleKey.Value = key;
     public void DisableStartOpen() => _startOpen.Value = false;
     public void EnableStartOpen() => _startOpen.Value = true;
+    public void EnableSettingsDisplay() => _showSettingsDisplay.Value = true;
+    public void DisableSettingsDisplay() => _showSettingsDisplay.Value = false;
 
     public void Init(ConfigFile config)
     {
@@ -34,5 +38,11 @@ internal class UIConfig
             "Start Open",
             false,
             "Whether the UI should be open when the game starts.");
+
+        _showSettingsDisplay = config.Bind(
+            "UI",
+            "Show Settings Display",
+            false,
+            "Display a settings overlay showing current configuration values.");
     }
 }

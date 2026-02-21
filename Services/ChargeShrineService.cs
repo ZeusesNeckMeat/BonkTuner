@@ -19,19 +19,9 @@ internal class ChargeShrineService : ServiceBase
         if (chargeShrine == null)
             return;
 
-        if (!StatService.TryGetStatValue(ConfigService.ChargeShrine.ChargeRateMultiplierFrequency, out var statValue))
-            return;
-
-        if (statValue == 0)
-            return;
-
-        var configMultiplier = ConfigService.ChargeShrine.ChargeRateMultiplier;
-        var totalMultiplier = GetTotalMultiplier(configMultiplier, statValue);
-
+        var totalMultiplier = GetTotalChargeMultiplier();
         var originalChargeTime = chargeShrine.chargeTime;
         chargeShrine.currentChargeTime = originalChargeTime / totalMultiplier;
-
-        Main.Logger.LogDebug($"[{nameof(ChargeShrineService)}.{nameof(TryUpdateShrineChargeTime)}] Updated shrine charge time. Original: {originalChargeTime:F2}s, New: {chargeShrine.currentChargeTime:F2}s, StatValue: {statValue}, ConfigMultiplier: {configMultiplier}, TotalMultiplier: {totalMultiplier:F2}x");
     }
 
     public static void TryUpdateShrineRewardOffers(Il2CppSystem.Collections.Generic.List<EncounterOffer> randomStatOffersResult, int amount, bool useShrineStats)
@@ -39,17 +29,7 @@ internal class ChargeShrineService : ServiceBase
         if (!useShrineStats || !CanContinue() || !ConfigService.ChargeShrine.IsRewardMultiplierEnabled)
             return;
 
-        if (!StatService.TryGetStatValue(ConfigService.ChargeShrine.RewardMultiplierFrequency, out var statValue))
-            return;
-
-        if (statValue == 0)
-            return;
-
-        var configMultiplier = ConfigService.ChargeShrine.RewardMultiplier;
-        var totalMultiplier = GetTotalMultiplier(configMultiplier, statValue);
-
-        Main.Logger.LogDebug($"[{nameof(ChargeShrineService)}.{nameof(TryUpdateShrineRewardOffers)}] Applying reward multiplier: {totalMultiplier}x (frequency count: {statValue}, config multiplier: {configMultiplier}x)");
-
+        var totalMultiplier = GetTotalRewardMultiplier();
         for (var i = 0; i < amount; i++)
         {
             var offer = randomStatOffersResult[i];
@@ -63,6 +43,20 @@ internal class ChargeShrineService : ServiceBase
                 Main.Logger.LogDebug($"[{nameof(ChargeShrineService)}.{nameof(TryUpdateShrineRewardOffers)}] Effect {j + 1}: {originalValue:F2} -> {effect.statModifier.modification:F2}");
             }
         }
+    }
+
+    public static float GetTotalRewardMultiplier()
+    {
+        return !StatService.TryGetStatValue(ConfigService.ChargeShrine.RewardMultiplierFrequency, out var statValue)
+            ? 1
+            : GetTotalMultiplier(ConfigService.ChargeShrine.RewardMultiplier, statValue);
+    }
+
+    public static float GetTotalChargeMultiplier()
+    {
+        return !StatService.TryGetStatValue(ConfigService.ChargeShrine.ChargeRateMultiplierFrequency, out var statValue)
+            ? 1
+            : GetTotalMultiplier(ConfigService.ChargeShrine.ChargeRateMultiplier, statValue);
     }
 
     private static float GetTotalMultiplier(float configMultiplier, float statValue)

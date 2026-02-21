@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.1.0
+- Added optional stats display during gameplay
+	- Shows current run stats and configuration settings
+
 ### 1.0.3
 - Fixed issue where shrine charge rate reduction was scaling far too quickly
 

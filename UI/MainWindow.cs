@@ -10,6 +10,7 @@ namespace BonkTuner.UI;
 internal class MainWindow : MonoBehaviour
 {
     private static bool _isGuiOpen = false;
+    private static SettingsDisplayWindow _settingsDisplay;
 
     private Rect _windowRect = new(x: 500, y: 250, width: 650, height: 750);
     private Vector2 _scrollPosition = Vector2.zero;
@@ -33,6 +34,11 @@ internal class MainWindow : MonoBehaviour
 
     public MainWindow(IntPtr ptr) : base(ptr) { }
 
+    public static void SetSettingsDisplayReference(SettingsDisplayWindow settingsDisplay)
+    {
+        _settingsDisplay = settingsDisplay;
+    }
+
     private void Start()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -46,6 +52,8 @@ internal class MainWindow : MonoBehaviour
         if (Input.GetKeyDown(ConfigService.UI.ToggleKey))
         {
             _isGuiOpen = !_isGuiOpen;
+            _settingsDisplay?.SetMainWindowState(_isGuiOpen);
+
             Main.Logger.LogInfo($"[{nameof(MainWindow)}] UI toggled: {_isGuiOpen}");
         }
     }
@@ -99,6 +107,7 @@ internal class MainWindow : MonoBehaviour
         if (GUILayout.Button("Close", Styles.Button))
         {
             _isGuiOpen = false;
+            _settingsDisplay?.SetMainWindowState(false);
         }
 
         GUILayout.EndVertical();
