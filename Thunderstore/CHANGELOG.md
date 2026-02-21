@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.0.3
+- Fixed issue where shrine charge rate reduction was scaling far too quickly
+
+### 1.0.2
+- Fixed issue where shrine charge rates were not properly updating
+
 ### 1.0.1
 - Fixed issue where challenge runs were still using the config values, even when IsEnabledDuringChallenges was disabled
 

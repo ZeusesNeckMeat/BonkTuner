@@ -26,9 +26,12 @@ internal class ChargeShrineService : ServiceBase
             return;
 
         var configMultiplier = ConfigService.ChargeShrine.ChargeRateMultiplier;
-        var multiplier = statValue * configMultiplier;
+        var totalMultiplier = GetTotalMultiplier(configMultiplier, statValue);
+
         var originalChargeTime = chargeShrine.chargeTime;
-        chargeShrine.currentChargeTime = originalChargeTime / multiplier;
+        chargeShrine.currentChargeTime = originalChargeTime / totalMultiplier;
+
+        Main.Logger.LogDebug($"[{nameof(ChargeShrineService)}.{nameof(TryUpdateShrineChargeTime)}] Updated shrine charge time. Original: {originalChargeTime:F2}s, New: {chargeShrine.currentChargeTime:F2}s, StatValue: {statValue}, ConfigMultiplier: {configMultiplier}, TotalMultiplier: {totalMultiplier:F2}x");
     }
 
     public static void TryUpdateShrineRewardOffers(Il2CppSystem.Collections.Generic.List<EncounterOffer> randomStatOffersResult, int amount, bool useShrineStats)
@@ -43,13 +46,9 @@ internal class ChargeShrineService : ServiceBase
             return;
 
         var configMultiplier = ConfigService.ChargeShrine.RewardMultiplier;
+        var totalMultiplier = GetTotalMultiplier(configMultiplier, statValue);
 
-        // Calculate the total multiplier based on frequency count
-        // Example: 10 shrines charged with 1.1x config = 1 + (10 * 0.1) = 2.0x total
-        var bonusPerCount = configMultiplier - 1f; // 1.1 - 1 = 0.1 (10% per shrine)
-        var totalMultiplier = 1f + (statValue * bonusPerCount); // 1 + (10 * 0.1) = 2.0x
-
-        Main.Logger.LogInfo($"[{nameof(ChargeShrineService)}.{nameof(TryUpdateShrineRewardOffers)}] Applying reward multiplier: {totalMultiplier}x (frequency count: {statValue}, config multiplier: {configMultiplier}x, bonus per count: {bonusPerCount:F2})");
+        Main.Logger.LogDebug($"[{nameof(ChargeShrineService)}.{nameof(TryUpdateShrineRewardOffers)}] Applying reward multiplier: {totalMultiplier}x (frequency count: {statValue}, config multiplier: {configMultiplier}x)");
 
         for (var i = 0; i < amount; i++)
         {
@@ -61,8 +60,22 @@ internal class ChargeShrineService : ServiceBase
                 var originalValue = effect.statModifier.modification;
                 effect.statModifier.modification *= totalMultiplier;
 
-                Main.Logger.LogDebug($"[{nameof(ChargeShrineService)}.{nameof(TryUpdateShrineRewardOffers)}]   Effect {j + 1}: {originalValue:F2} -> {effect.statModifier.modification:F2}");
+                Main.Logger.LogDebug($"[{nameof(ChargeShrineService)}.{nameof(TryUpdateShrineRewardOffers)}] Effect {j + 1}: {originalValue:F2} -> {effect.statModifier.modification:F2}");
             }
         }
+    }
+
+    private static float GetTotalMultiplier(float configMultiplier, float statValue)
+    {
+        var bonusPercent = configMultiplier - 1f;
+        var totalMultiplier = 1f + (statValue * bonusPercent);
+
+        if (totalMultiplier <= 0.01f)
+        {
+            Main.Logger.LogWarning($"[{nameof(ChargeShrineService)}.{nameof(GetTotalMultiplier)}] Total multiplier too low ({totalMultiplier}), clamping to 0.01x");
+            totalMultiplier = 0.01f;
+        }
+
+        return totalMultiplier;
     }
 }
