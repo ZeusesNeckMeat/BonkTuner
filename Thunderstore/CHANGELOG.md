@@ -1,5 +1,21 @@
 ## Changelog
 
+### 1.1.1
+- Fixed NullReferenceException when trying to retrieve stat values
+
+### 1.1.0
+- Added optional stats display during gameplay
+	- Shows current run stats and configuration settings
+
+### 1.0.3
+- Fixed issue where shrine charge rate reduction was scaling far too quickly
+
+### 1.0.2
+- Fixed issue where shrine charge rates were not properly updating
+
+### 1.0.1
+- Fixed issue where challenge runs were still using the config values, even when IsEnabledDuringChallenges was disabled
+
 ### 1.0.0 (Initial Release)
 
 **Features:**

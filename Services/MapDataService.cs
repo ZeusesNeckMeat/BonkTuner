@@ -29,7 +29,9 @@ internal class MapDataService : ServiceBase
 
     public static void TrySetMapDataOnNewMap(RunConfig newRunConfig)
     {
-        if (!CanContinue())
+        // Restore original data before any other checks to make sure the original state is restored, even in the case of loading a challenge
+        RestoreOriginalMapData(newRunConfig);
+        if (!CanContinue(newRunConfig))
             return;
 
         if (newRunConfig.mapData == null)
@@ -39,10 +41,6 @@ internal class MapDataService : ServiceBase
         }
 
         var mapModifierConfig = ConfigService.GetMapModifiers(newRunConfig.mapData.eMap);
-
-        // Always restore to original values first (in case config was disabled)
-        RestoreOriginalMapData(newRunConfig);
-
         if (!mapModifierConfig?.IsEnabled ?? false)
         {
             Main.Logger.LogInfo($"[{nameof(MapDataService)}.{nameof(TrySetMapDataOnNewMap)}] Map modifiers disabled for {newRunConfig.mapData.eMap}, using original values");

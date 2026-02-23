@@ -37,6 +37,22 @@ internal class CoreSettingsTab
         }
 
         GUILayout.Label("", GUILayout.Height(12));
+        GUILayout.Label("UI Settings", Styles.Header);
+        GUILayout.Label("", GUILayout.Height(8));
+
+        var showSettingsDisplay = ConfigService.UI.ShowSettingsDisplay;
+        var newShowSettingsDisplay = GUILayout.Toggle(showSettingsDisplay, " Show Settings Display", Styles.Toggle);
+        if (newShowSettingsDisplay != showSettingsDisplay)
+        {
+            if (newShowSettingsDisplay)
+                ConfigService.UI.EnableSettingsDisplay();
+            else
+                ConfigService.UI.DisableSettingsDisplay();
+
+            Main.Logger.LogInfo($"Show settings display changed to: {newShowSettingsDisplay}");
+        }
+
+        GUILayout.Label("", GUILayout.Height(12));
         GUILayout.Label("Press F5 to toggle this menu", Styles.Label);
     }
 }

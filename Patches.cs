@@ -34,8 +34,8 @@ internal static class MapGenerator_GenerateMap_2_Patch
 [HarmonyPatch(typeof(ChargeShrine), nameof(ChargeShrine.OnTriggerEnter))]
 internal static class ChargeShrine_OnTriggerEnter_Patch
 {
-    [HarmonyPrefix]
-    public static void Prefix(BaseInteractable __instance)
+    [HarmonyPostfix]
+    public static void Postfix(BaseInteractable __instance)
     {
         ChargeShrineService.TryUpdateShrineChargeTime(__instance);
     }
