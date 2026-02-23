@@ -1,5 +1,8 @@
 ## Changelog
 
+### 1.1.1
+- Fixed NullReferenceException when trying to retrieve stat values
+
 ### 1.1.0
 - Added optional stats display during gameplay
 	- Shows current run stats and configuration settings

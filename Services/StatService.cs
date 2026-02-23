@@ -9,6 +9,11 @@ internal class StatService
     public static bool TryGetStatValue(MultiplyStatFrequency stat, out int value)
     {
         value = 0;
+        if (MapController.IsMainMenu() || RunStats.stats == null || RunStats.stats.Count == 0)
+            return false;
+
+        if (MyPlayer.Instance?.inventory == null)
+            return false;
 
         switch (stat)
         {

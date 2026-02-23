@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Description>Customize game difficulty with map modifiers, enemy spawn presets, shrine multipliers, and more. Features an in-game UI for real-time configuration.</Description>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>disable</Nullable>
   </PropertyGroup>
@@ -56,6 +56,12 @@
   <Target Name="CopyToR2ModMan" AfterTargets="Build" Condition="Exists('$(R2ModManProfile)')">
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(R2ModManProfile)" />
     <Message Text="Copied $(TargetFileName) to R2ModMan profile" Importance="high" />
+  </Target>
+
+  <!-- Post-build event to copy DLL to Thunderstore directory in this project -->
+  <Target Name="CopyToThunderstoreDirectory" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProjectDir)Thunderstore\" SkipUnchangedFiles="true" />
+    <Message Text="Copied $(TargetFileName) to Thunderstore Directory" Importance="high" />
   </Target>
 
 </Project>
